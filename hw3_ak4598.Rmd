@@ -8,18 +8,20 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(p8105.datasets)
 ```
 
 # Problem 1
 
-We will explore the `instacart` dataset in this problem.
+We will explore the `instacart` dataset in this problem. These anonymized data entail grocery orders from Instacart app users. 
 
 ```{r, include = FALSE}
-library(p8105.datasets)
 data("instacart")
 ```
 
-**write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illustrative examples of observations.**
+The `instacart` dataset has `r format(nrow(instacart),scientific=FALSE, big.mark=",")` observations and `r ncol(instacart)` variables. Some important identification variables include `order_id`, `user_id`, and `product_id` - which help to organize the data by app users, their orders, and the items they ordered. `product_name` includes the names of the products ordered, and `order_hour_of_day` shows the hour of the day when the user placed the order.
+
+For example, user 112108 reordered "Bulgarian Yoghurt" as part of an order that also included celery and cucumbers. Another user (206209) put in an order at 2pm about 30 days after their prior order, and this contained bananas, pepsi, dark chocolate, and ice cream.
 
 ## Problem 1.1
 
