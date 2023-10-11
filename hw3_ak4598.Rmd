@@ -128,6 +128,15 @@ data("brfss_smart2010")
 
 -   Organize responses as a factor taking levels ordered from "Poor" to "Excellent"
 
+```{r}
+brfss_smart2010 <- brfss_smart2010 %>%
+  janitor::clean_names() %>%
+  filter(topic == "Overall Health") %>%
+  mutate(response = factor(response, 
+                           ordered = TRUE,
+                           levels = c("Poor", "Fair", "Good", "Very good", "Excellent")))
+  
+```
 
 ## Problem 2.1
 
