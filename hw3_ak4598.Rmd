@@ -17,14 +17,6 @@ knitr::opts_chunk$set(
 )
 
 theme_set(theme_bw() + theme(legend.position = "bottom"))
-
-options(
-  ggplot2.continuous.colour = "viridis",
-  ggplot2.continuous.fill = "viridis"
-)
-
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d
 ```
 
 # Problem 1
@@ -189,7 +181,9 @@ brfss_excellent <- brfss_smart2010 %>%
 
 This line graph (or spaghetti plot) uses the `brfss_excellent` dataset to display the average data value over time by state.
 
-```{r plot_spaghetti, , warning = FALSE, message = FALSE}
+```{r plot_spaghetti, warning = FALSE, message = FALSE}
+scale_colour_discrete = scale_colour_viridis_d
+
 ggplot(brfss_excellent, aes(x = year, y = data_value_avg, color = locationabbr)) + 
   geom_line() + 
   labs(
@@ -217,7 +211,7 @@ This plot shows the distribution of `data_value` for overall health response rat
 
 ```{r plot_panels}
 ggplot(brfss_ny, aes(x = response, y = data_value)) + 
-  geom_boxplot() + 
+  geom_boxplot(fill = "#56B4E9", alpha = 0.6) + 
   facet_grid(~year) + 
   labs(title = "Distributions by Overall Health Response Ratings, 2006 and 2010",
        x = "Rating",
@@ -294,8 +288,9 @@ In the table, we can see that the number of men and women is roughly equal in th
 ### These boxplots show the age distributions for men and women in each education category. 
 
 ```{r gender, warning = FALSE, message = FALSE}
-ggplot(covar, aes(x = sex, y = age, color = sex)) + 
-  geom_boxplot(fill = "grey", alpha = 0.2) + 
+ggplot(covar, aes(x = sex, y = age, fill = sex)) + 
+  geom_boxplot(alpha = 0.6)  + 
+  scale_fill_manual(values=c("#E69F00", "#56B4E9")) + 
   facet_grid(~education) + 
   theme(legend.position = "none") + 
   labs(
@@ -310,11 +305,34 @@ Again, the age distributions among men and women are similar for those with less
 
 ## Problem 3.3
 
-Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
+### Create the dataset
+
+The dataset `accel_total` includes the total activity experienced by participant.  
 
 ```{r}
-
+accel_total <- accel_long %>%
+  group_by(seqn, age, sex, education) %>%
+  summarise(total_activity = sum(mims))
 ```
+
+### Create the plot 
+
+Using the dataset `accel_total`, this plot shows the total activity by participant in relation to age in years. The relationships are broken down by gender and education level.
+
+```{r total_activity, warning = FALSE, message = FALSE}
+ggplot(accel_total, aes(x = age, y = total_activity, color = sex)) + 
+  geom_line(size = .5, alpha = .6) + 
+  geom_smooth(se = FALSE, alpha = 1, aes(color = sex)) +  
+  scale_color_manual(values=c("#E69F00", "#56B4E9")) + 
+  facet_grid(~education) + 
+  labs(
+    title = "Total activity in relation to age, by gender and education level",
+    x = "Age in years",
+    y = "Total activity",
+    color = "Gender"
+  )
+```
+
 
 
 ## Problem 3.4
