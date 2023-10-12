@@ -329,18 +329,32 @@ ggplot(accel_total, aes(x = age, y = total_activity, color = sex)) +
     title = "Total activity in relation to age, by gender and education level",
     x = "Age in years",
     y = "Total activity",
-    color = "Gender"
+    color = "Gender",
+    caption = "Lines show the smoothed relationship between total activity and age"
   )
 ```
 
 
-
 ## Problem 3.4
 
-Accelerometer data allows the inspection activity over the course of the day. Make a three-panel plot that shows the 24-hour activity time courses for each education level and use color to indicate sex. Describe in words any patterns or conclusions you can make based on this graph; including smooth trends may help identify differences.
+### Create the dataset
 
-```{r}
+This plot is a three-panel plot that shows the 24-hour total activity time for each education level, by sex. 
 
+```{r minute_activity, warning = FALSE, message = FALSE}
+ggplot(accel_long, aes(x = minute, y = mims, color = sex)) + 
+  geom_line(size = .5, alpha = .2) + 
+  geom_smooth(se = FALSE, alpha = 1, aes(color = sex)) +  
+  scale_color_manual(values=c("#E69F00", "#56B4E9")) + 
+  facet_grid(~education) + 
+  labs(
+    title = "Participant-level activity throughout the day by gender and education",
+    x = "Minute",
+    y = "Activity",
+    color = "Gender",
+    caption = "Lines show the smoothed trend over participants"
+  )
 ```
 
+People with more than high school education seem to be most active between minutes 500 and 1,200, while people with less than or equivalent to high school education seem to have slightly higher activity levels earlier in that time frame than after minute 1,000. The more pronounced gender differences can be seen in the most-educated category, in which women had more activity than men throughout most of the day.
 
